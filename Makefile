@@ -19,6 +19,8 @@ test:
 report:
 	./gradlew jacocoTestReport
 
+start:
+	gradle run
 
 
 

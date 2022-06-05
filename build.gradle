@@ -21,6 +21,10 @@ repositories {
 
 dependencies {
 
+    implementation 'io.javalin:javalin:4.6.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.36'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
@@ -64,3 +68,6 @@ jacocoTestReport {
 
 group = 'hexlet.code'
 version = '1.0-SNAPSHOT'
+
+task stage(dependsOn: ['clean', 'installDist'])
+installDist.mustRunAfter clean
