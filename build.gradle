@@ -1,0 +1,66 @@
+plugins {
+    id 'application'
+    id 'com.github.ben-manes.versions' version '0.39.0'
+    id 'checkstyle'
+    id 'jacoco'
+    id 'com.adarshr.test-logger' version '3.1.0'
+}
+
+
+application {
+    mainClass = 'hexlet.code.App'
+}
+
+compileJava {
+    options.release = 16
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation('org.junit.jupiter:junit-jupiter')
+}
+
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport// report is always generated after tests run
+    testlogger {
+        theme 'mocha'
+        showExceptions true
+        showStackTraces true
+        showFullStackTraces false
+        showCauses true
+        slowThreshold 2000
+        showSummary true
+        showSimpleNames false
+        showPassed true
+        showSkipped true
+        showFailed true
+        showStandardStreams true
+        showPassedStandardStreams true
+        showSkippedStandardStreams true
+        showFailedStandardStreams true
+        logLevel 'lifecycle'
+    }
+}
+
+testlogger {
+    theme 'mocha'
+    slowThreshold 5000
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
+
+group = 'hexlet.code'
+version = '1.0-SNAPSHOT'
