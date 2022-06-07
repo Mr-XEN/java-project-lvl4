@@ -7,17 +7,22 @@ plugins {
     id 'io.ebean' version '12.15.1'
 }
 
+group = 'hexlet.code'
+version = '1.0-SNAPSHOT'
+
 
 application {
     mainClass = 'hexlet.code.App'
 }
 
-compileJava {
-    options.release = 16
-}
+
 
 repositories {
     mavenCentral()
+}
+
+compileJava {
+    options.release = 16
 }
 
 dependencies {
@@ -88,8 +93,7 @@ jacocoTestReport {
     }
 }
 
-group = 'hexlet.code'
-version = '1.0-SNAPSHOT'
+
 
 task generateMigrations(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
