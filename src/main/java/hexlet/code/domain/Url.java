@@ -22,26 +22,23 @@ public final class Url extends Model {
     @WhenModified
     private Instant updatedAt;
 
-    public Url() {
-    }
-
     public Url(String name) {
         this.name = name;
     }
 
     public long getId() {
-        return this.id;
+        return id;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public Instant getCreatedAt() {
-        return this.createdAt;
+        return createdAt;
     }
 
     public Instant getUpdatedAt() {
-        return this.updatedAt;
+        return updatedAt;
     }
 }

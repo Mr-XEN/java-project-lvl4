@@ -96,5 +96,9 @@ task generateMigrations(type: JavaExec) {
     mainClass = 'hexlet.code.MigrationGenerator'
 }
 
+checkstyle {
+    toolVersion '9.0'
+}
+
 task stage(dependsOn: ['clean', 'installDist'])
 installDist.mustRunAfter clean
