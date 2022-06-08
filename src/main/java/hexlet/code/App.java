@@ -19,6 +19,7 @@ public class App {
         return Integer.parseInt(port);
     }
 
+
     private static String getMode() {
         return System.getenv().getOrDefault("APP_ENV", "development");
     }
