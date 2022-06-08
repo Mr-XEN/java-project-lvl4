@@ -5,9 +5,9 @@ datasource:
     password: sa
     url: "jdbc:h2:./database2"
   production:
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: apxdqnznidrqbj
+    password: 675c52a6c9a2f1bd465e02a2ba4f6a1c16d89e5ba7c1569ffba22ca9afb3ca89
+    url: jdbc:postgres://apxdqnznidrqbj:675c52a6c9a2f1bd465e02a2ba4f6a1c16d89e5ba7c1569ffba22ca9afb3ca89@ec2-52-18-116-67.eu-west-1.compute.amazonaws.com:5432/d7a193nair243m
 
 ebean:
   migration:
