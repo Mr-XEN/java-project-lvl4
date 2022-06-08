@@ -29,6 +29,17 @@ public final class App {
         return getMode().equals("production");
     }
 
+    private static TemplateEngine getTemplateEngine() {
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.addDialect(new LayoutDialect());
+        templateEngine.addDialect(new Java8TimeDialect());
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("/templates/");
+        templateEngine.addTemplateResolver(templateResolver);
+
+        return templateEngine;
+    }
+
     private static void addRoutes(Javalin app) {
         app.get("/", RootController.welcome);
 //        app.get("/about", RootController.about);
@@ -44,17 +55,6 @@ public final class App {
         });
 
 
-    }
-
-    private static TemplateEngine getTemplateEngine() {
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.addDialect(new LayoutDialect());
-        templateEngine.addDialect(new Java8TimeDialect());
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("/templates/");
-        templateEngine.addTemplateResolver(templateResolver);
-
-        return templateEngine;
     }
 
     public static Javalin getApp() {
