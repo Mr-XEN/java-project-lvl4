@@ -1,6 +1,7 @@
 package hexlet.code;
 
 import hexlet.code.domain.Url;
+import hexlet.code.domain.query.QUrl;
 import io.ebean.DB;
 import io.ebean.Transaction;
 import io.javalin.Javalin;
@@ -83,6 +84,7 @@ class AppTest {
     @Test
     void testAddUrl() {
         String url = "https://www.youtube.com/";
+        String formattedUrl = "www.youtube.com";
         HttpResponse<String> responsePost = Unirest
                 .post(baseUrl + "/urls")
                 .field("url", url)
@@ -97,8 +99,17 @@ class AppTest {
         String body = response.getBody();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(body).contains("www.youtube.com");
+        assertThat(body).contains(formattedUrl);
         assertThat(body).contains("Страница успешно добавлена");
+
+        Url listOfUrls = new QUrl()
+                .name.equalTo(formattedUrl)
+                .findOne();
+
+        assertThat(listOfUrls).isNotNull();
+        assertThat(listOfUrls.getName()).isEqualTo(formattedUrl);
+
+
 
 
     }
