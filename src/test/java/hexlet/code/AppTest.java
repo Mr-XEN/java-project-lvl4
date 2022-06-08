@@ -22,7 +22,7 @@ class AppTest {
 
     private static Javalin app;
     private static String baseUrl;
-    private static Url existingArticle;
+    private static Url existingUrl;
     private static Transaction transaction;
 
     @BeforeAll
@@ -32,8 +32,8 @@ class AppTest {
         int port = app.port();
         baseUrl = "http://localhost:" + port;
 
-        existingArticle = new Url("example name");
-        existingArticle.save();
+        existingUrl = new Url("https://www.deepl.com");
+        existingUrl.save();
     }
 
     @AfterAll
@@ -55,6 +55,52 @@ class AppTest {
     void testIndex() {
         HttpResponse<String> response = Unirest.get(baseUrl).asString();
         assertThat(response.getStatus()).isEqualTo(200);
+    }
+
+    @Test
+    void testGetUrls() {
+        HttpResponse<String> response = Unirest
+                .get(baseUrl + "/urls")
+                .asString();
+        String body = response.getBody();
+        System.out.println(body);
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(body).contains(existingUrl.getName());
+    }
+
+    @Test
+    void testShow() {
+        HttpResponse<String> response = Unirest
+                .get(baseUrl + "/urls/" + existingUrl.getId())
+                .asString();
+        String body = response.getBody();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(body).contains(existingUrl.getName());
+    }
+
+    @Test
+    void testAddUrl() {
+        String url = "https://www.youtube.com/";
+        HttpResponse<String> responsePost = Unirest
+                .post(baseUrl + "/urls")
+                .field("url", url)
+                .asEmpty();
+
+        assertThat(responsePost.getStatus()).isEqualTo(302);
+        assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
+
+        HttpResponse<String> response = Unirest
+                .get(baseUrl + "/urls")
+                .asString();
+        String body = response.getBody();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(body).contains("www.youtube.com");
+        assertThat(body).contains("Страница успешно добавлена");
+
+
     }
 
 }
