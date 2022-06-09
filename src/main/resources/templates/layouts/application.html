@@ -10,42 +10,39 @@
   </head>
 
   <body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <div class="navbar-nav">
-            <a class="nav-link" href="/">Главная</a>
-            <a class="nav-link" href="/urls">Сайты</a>
-          </div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand">Анализатор страниц</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav">
+          <a class="nav-link" href="/">Главная</a>
+          <a class="nav-link" href="/urls">Сайты</a>
         </div>
       </div>
-    </nav>
- 
-    <main class="flex-grow-1">
-      <div
-        th:if="${session.flash}"
-        th:class="'rounded-0 m-0 alert alert-dismissible fade show alert-' + ${ctx.consumeSessionAttribute('flash-type')}"
-        role="alert"
-      >
-        <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <div class="container mt-4">
-        <h1 class="my-4">
-          <section layout:fragment="header"></section>
-        </h1>
-        <section layout:fragment="content"></section>
-      </div>
-    </main>
- 
+    </div>
+  </nav>
+  <main class="flex-grow-1">
+
+    <div
+            th:if="${session.flash}"
+            th:class="'rounded-0 m-0 alert alert-dismissible fade show alert-' + ${ctx.consumeSessionAttribute('flash-type')}"
+            role="alert">
+      <p class="m-0" th:text="${ctx.consumeSessionAttribute('flash')}"></p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div>
+      <section layout:fragment="content"></section>
+    </div>
+  </main>
+
     <footer class="footer border-top py-3 mt-5 bg-light">
       <div class="container-xl">
         <div class="text-center">
           created by
-          <a href="https://ru.hexlet.io" target="_blank">Hexlet</a>
+          <a href="https://github.com/Mr-XEN" target="_blank">MrXEN</a>
         </div>
       </div>
     </footer>

@@ -2,7 +2,9 @@ package hexlet.code.controllers;
 
 
 import hexlet.code.domain.Url;
+import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
+import hexlet.code.domain.query.QUrlCheck;
 import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
@@ -12,6 +14,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 
 public final class UrlController {
 
@@ -50,16 +59,16 @@ public final class UrlController {
             throw new NotFoundResponse();
         }
 
+        List<UrlCheck> urlsChecks = new QUrlCheck()
+                .url.equalTo(url)
+                .orderBy().id.desc()
+                .findList();
+
+
+        ctx.attribute("urlsChecks", urlsChecks);
         ctx.attribute("urls", url);
         ctx.render("urls/show.html");
     };
-
-//    public static Handler newArticle = ctx -> {
-//        Url article = new Url();
-//
-//        ctx.attribute("article", article);
-//        ctx.render("articles/new.html");
-//    };
 
     public static Handler addUrl = ctx -> {
         String urlFromForm = ctx.formParam("url");
@@ -71,7 +80,6 @@ public final class UrlController {
             return;
         }
         Url one = new QUrl().name.contains(validUrl).findOne();
-        System.out.println("349857349543098577534908750349875" + one);
 
         if (one != null) {
             ctx.sessionAttribute("flash", "Страница уже существует");
@@ -88,6 +96,34 @@ public final class UrlController {
         ctx.redirect("/urls");
     };
 
+    public static Handler addCheck = ctx -> {
+        int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
+        Url url = new QUrl().id.equalTo(id).findOne();
+
+        try {
+            int status = Unirest.get(url.getName())
+                    .asString()
+                    .getStatus();
+
+            Document doc = Jsoup.connect(url.getName()).get();
+            String title = doc.title();
+            String h1 = doc.select("h1").text();
+            String description = doc.select("meta[name=description]").attr("content");
+
+            UrlCheck newCheck = new UrlCheck(status, title, h1, description, url);
+            newCheck.save();
+
+//            ctx.attribute("urls", url);
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flash-type", "success");
+
+        } catch (UnirestException e) {
+            ctx.sessionAttribute("flash", "Страница недоступна");
+            ctx.sessionAttribute("flash-type", "danger");
+        }
+        ctx.redirect("/urls/" + id);
+    };
+
 
     private static String getHostFromUrl(String newUrl) {
 
@@ -95,9 +131,9 @@ public final class UrlController {
             URL url = new URL(newUrl);
             int port = url.getPort();
             if (port < 1) {
-                return url.getHost();
+                return url.getProtocol() + "://" + url.getHost();
             } else {
-                return url.getHost() + ":" + url.getPort();
+                return url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
             }
         } catch (Exception e) {
             System.out.println("Not valid site");

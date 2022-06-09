@@ -7,11 +7,16 @@ import io.ebean.Transaction;
 import io.javalin.Javalin;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,9 +30,10 @@ class AppTest {
     private static String baseUrl;
     private static Url existingUrl;
     private static Transaction transaction;
+    private static MockWebServer mockServer;
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void beforeAll() throws IOException {
         app = App.getApp();
         app.start(0);
         int port = app.port();
@@ -35,11 +41,19 @@ class AppTest {
 
         existingUrl = new Url("https://www.deepl.com");
         existingUrl.save();
+
+        File file = new File("src/test/resources/expected.html");
+        String expected = file.toString();
+
+        mockServer = new MockWebServer();
+        mockServer.enqueue(new MockResponse().setBody(expected));
+        mockServer.start();
     }
 
     @AfterAll
-    public static void afterAll() {
+    public static void afterAll() throws IOException {
         app.stop();
+        mockServer.shutdown();
     }
 
     @BeforeEach
@@ -83,12 +97,11 @@ class AppTest {
 
     @Test
     void testAddUrl() {
-        String url = "https://www.youtube.com/";
-        String formattedUrl = "www.youtube.com";
+        String url = "https://www.youtube.com";
         HttpResponse<String> responsePost = Unirest
                 .post(baseUrl + "/urls")
                 .field("url", url)
-                .asEmpty();
+                .asString();
 
         assertThat(responsePost.getStatus()).isEqualTo(302);
         assertThat(responsePost.getHeaders().getFirst("Location")).isEqualTo("/urls");
@@ -99,19 +112,38 @@ class AppTest {
         String body = response.getBody();
 
         assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(body).contains(formattedUrl);
+        assertThat(body).contains(url);
         assertThat(body).contains("Страница успешно добавлена");
 
         Url listOfUrls = new QUrl()
-                .name.equalTo(formattedUrl)
+                .name.equalTo(url)
                 .findOne();
 
         assertThat(listOfUrls).isNotNull();
-        assertThat(listOfUrls.getName()).isEqualTo(formattedUrl);
-
-
-
-
+        assertThat(listOfUrls.getName()).isEqualTo(url);
     }
 
+    @Test
+
+    public void testCheckUrl() {
+
+        String mockUrl = mockServer.url("/").toString();
+
+        HttpResponse httpResponse = Unirest.post(baseUrl + "/urls")
+                .field("url", mockUrl)
+                .asEmpty();
+
+        assertThat(httpResponse.getStatus()).isEqualTo(302);
+
+        Url actualUrl = new QUrl()
+                .name.equalTo(mockUrl.substring(0, mockUrl.length() - 1))
+                .findOne();
+
+        HttpResponse<String> response = Unirest
+                .post(baseUrl + "/urls/" + actualUrl.getId() + "/check")
+                .asEmpty();
+
+        assertThat(response.getStatus()).isEqualTo(302);
+
+    }
 }

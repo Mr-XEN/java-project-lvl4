@@ -2,19 +2,17 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/application.html}">
 
-<section layout:fragment="header">
-    Сайты
-</section>
 
 <section layout:fragment="content">
-
-    <table class="table">
+    <div class="container-lg mt-5">
+    <table class="table table-bordered table-hover mt-3">
         <thead>
         <tr>
-            <th class="col-1">ID</th>
-            <th class="col-3">Имя</th>
+            <th>ID</th>
+            <th>Имя</th>
             <th>Последняя проверка</th>
-            <th class="col-2">Код ответа</th>
+            <th>Код ответа</th>
+
         </tr>
         </thead>
         <tbody>
@@ -23,11 +21,12 @@
             <td>
                 <a th:href="@{/urls/{id}(id=*{getId()})}" th:text="${#strings.abbreviate(urls.getName(), 30)}"></a>
             </td>
-<!--            <td th:text="${#strings.abbreviate(article.getDescription(), 60)}"></td>-->
-            <td th:text="${#temporals.format(urls.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:unless="${urls.urlChecks.isEmpty}" th:text="${#temporals.format(urls.getUrlChecks.get(urls.getUrlChecks.size() - 1).getCreatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:unless="${urls.urlChecks.isEmpty}" th:text="*{urlChecks.get(0).statusCode}"></td>
         </tr>
         </tbody>
     </table>
+    </div>
 
     <nav aria-label="Page navigation" th:if="${#lists.size(pages)}">
         <ul class="pagination justify-content-center mt-5">
