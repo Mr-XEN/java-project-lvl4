@@ -68,30 +68,61 @@ public final class UrlController {
     };
 
     public static Handler addUrl = ctx -> {
-        String urlFromForm = ctx.formParam("url");
-        String validUrl = getHostFromUrl(urlFromForm);
-        if (validUrl == null) {
+        try {
+
+            String urlFromForm = ctx.formParam("url");
+            String validUrl = getHostFromUrl(urlFromForm);
+            URL url = new URL(validUrl);
+//            String validUrl = getHostFromUrl(urlFromForm);
+
+            boolean urlExist = new QUrl()
+                    .name.equalTo(validUrl)
+                    .exists();
+
+            if (urlExist) {
+                ctx.sessionAttribute("flash", "Страница уже существует");
+                ctx.sessionAttribute("flash-type", "info");
+            } else {
+                new Url(validUrl).save();
+
+                ctx.sessionAttribute("flash", "Страница успешно добавлена");
+                ctx.sessionAttribute("flash-type", "success");
+            }
+        } catch (Exception e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.redirect("/");
             return;
         }
-        Url one = new QUrl().name.contains(validUrl).findOne();
-
-        if (one != null) {
-            ctx.sessionAttribute("flash", "Страница уже существует");
-            ctx.sessionAttribute("flash-type", "info");
-            ctx.redirect("/");
-
-        }
-
-        Url newUrl = new Url(validUrl);
-        newUrl.save();
-
-        ctx.sessionAttribute("flash", "Страница успешно добавлена");
-        ctx.sessionAttribute("flash-type", "success");
         ctx.redirect("/urls");
     };
+
+//    public static Handler addUrl = ctx -> {
+//
+//        String urlFromForm = ctx.formParam("url");
+//        String validUrl = getHostFromUrl(urlFromForm);
+//        if (validUrl == null) {
+//            ctx.sessionAttribute("flash", "Некорректный URL");
+//            ctx.sessionAttribute("flash-type", "danger");
+//            ctx.redirect("/");
+//            return;
+//        }
+//        Url one = new QUrl().name.contains(validUrl).findOne();
+//
+//        if (one != null) {
+//            ctx.sessionAttribute("flash", "Страница уже существует");
+//            ctx.sessionAttribute("flash-type", "info");
+//            ctx.redirect("/");
+//
+//        }
+//
+//        Url newUrl = new Url(validUrl);
+//        newUrl.save();
+//
+//        ctx.sessionAttribute("flash", "Страница успешно добавлена");
+//        ctx.sessionAttribute("flash-type", "success");
+//        ctx.redirect("/urls");
+//    };
 
     public static Handler addCheck = ctx -> {
         int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
