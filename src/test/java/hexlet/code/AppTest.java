@@ -15,8 +15,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,8 +43,8 @@ class AppTest {
         existingUrl = new Url("https://www.deepl.com");
         existingUrl.save();
 
-        File file = new File("src/test/resources/expected.html");
-        String expected = file.toString();
+
+        String expected = Files.readString(Paths.get("src/test/resources/expected.html"));
 
         mockServer = new MockWebServer();
         mockServer.enqueue(new MockResponse().setBody(expected));
@@ -125,7 +126,7 @@ class AppTest {
 
     @Test
 
-    public void testCheckUrl() {
+    public void testCheckUrl() throws IOException {
 
         String mockUrl = mockServer.url("/").toString();
 
