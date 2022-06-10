@@ -1,6 +1,5 @@
 package hexlet.code.controllers;
 
-
 import hexlet.code.domain.Url;
 import hexlet.code.domain.UrlCheck;
 import hexlet.code.domain.query.QUrl;
@@ -9,18 +8,17 @@ import io.ebean.PagedList;
 import io.javalin.http.Handler;
 import io.javalin.http.NotFoundResponse;
 
-
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
 
 public final class UrlController {
 
@@ -64,7 +62,6 @@ public final class UrlController {
                 .orderBy().id.desc()
                 .findList();
 
-
         ctx.attribute("urlsChecks", urlsChecks);
         ctx.attribute("urls", url);
         ctx.render("urls/show.html");
@@ -101,11 +98,11 @@ public final class UrlController {
         Url url = new QUrl().id.equalTo(id).findOne();
 
         try {
-            int status = Unirest.get(url.getName())
-                    .asString()
-                    .getStatus();
 
-            Document doc = Jsoup.connect(url.getName()).get();
+            HttpResponse<String> response = Unirest.get(url.getName()).asString();
+            int status = response.getStatus();
+
+            Document doc = Jsoup.parse(response.getBody());
             String title = doc.title();
             String h1 = doc.select("h1").text();
             String description = doc.select("meta[name=description]").attr("content");
@@ -113,7 +110,6 @@ public final class UrlController {
             UrlCheck newCheck = new UrlCheck(status, title, h1, description, url);
             newCheck.save();
 
-//            ctx.attribute("urls", url);
             ctx.sessionAttribute("flash", "Страница успешно проверена");
             ctx.sessionAttribute("flash-type", "success");
 

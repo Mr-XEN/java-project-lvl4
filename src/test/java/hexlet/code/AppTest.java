@@ -130,9 +130,9 @@ class AppTest {
 
         String mockUrl = mockServer.url("/").toString();
 
-        HttpResponse httpResponse = Unirest.post(baseUrl + "/urls")
+        HttpResponse<String> httpResponse = Unirest.post(baseUrl + "/urls")
                 .field("url", mockUrl)
-                .asEmpty();
+                .asString();
 
         assertThat(httpResponse.getStatus()).isEqualTo(302);
 
@@ -142,9 +142,17 @@ class AppTest {
 
         HttpResponse<String> response = Unirest
                 .post(baseUrl + "/urls/" + actualUrl.getId() + "/check")
-                .asEmpty();
+                .asString();
 
         assertThat(response.getStatus()).isEqualTo(302);
+
+        String anotherResponse = Unirest.get(baseUrl + "/urls/" + actualUrl.getId())
+                .asString()
+                .getBody();
+
+        assertThat(anotherResponse).contains("Анализатор страниц");     // title
+        assertThat(anotherResponse).contains("Сайт https://itchief.ru");     // h1
+        assertThat(anotherResponse).contains("Фронтэнд это ужасно");     //description
 
     }
 }

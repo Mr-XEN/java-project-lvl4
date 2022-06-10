@@ -40,8 +40,8 @@
             <tr th:each="urlsChecks : ${urlsChecks}" th:object="${urlsChecks}">
                 <td th:text="*{getId()}"></td>
                 <td th:text="*{getStatusCode()}"></td>
-                <td th:text="${#strings.abbreviate(urlsChecks.getTitle(), 20)}"></td>
-                <td th:text="${#strings.abbreviate(urlsChecks.getH1(), 20)}"></td>
+                <td th:text="${#strings.abbreviate(urlsChecks.getTitle(), 40)}"></td>
+                <td th:text="${#strings.abbreviate(urlsChecks.getH1(), 40)}"></td>
                 <td th:text="${#strings.abbreviate(urlsChecks.getDescription(), 50)}"></td>
                 <td th:text="${#temporals.format(urlsChecks.getCreatedAt(), 'dd/MM/yyyy HH:mm')}"></td>
             </tr>
