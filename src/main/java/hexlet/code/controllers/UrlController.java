@@ -57,13 +57,13 @@ public final class UrlController {
             throw new NotFoundResponse();
         }
 
-        List<UrlCheck> urlsChecks = new QUrlCheck()
+        List<UrlCheck> urlChecks = new QUrlCheck()
                 .url.equalTo(url)
                 .orderBy().id.desc()
                 .findList();
 
-        ctx.attribute("urlsChecks", urlsChecks);
-        ctx.attribute("urls", url);
+        ctx.attribute("urlChecks", urlChecks);
+        ctx.attribute("url", url);
         ctx.render("urls/show.html");
     };
 
