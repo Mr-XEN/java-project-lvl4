@@ -80,9 +80,9 @@ public final class UrlController {
 
         if (one != null) {
             ctx.sessionAttribute("flash", "Страница уже существует");
-            ctx.sessionAttribute("flash-type", "danger");
+            ctx.sessionAttribute("flash-type", "info");
             ctx.redirect("/");
-            return;
+
         }
 
         Url newUrl = new Url(validUrl);
