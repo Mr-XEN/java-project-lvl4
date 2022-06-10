@@ -16,13 +16,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="urls : ${urls}" th:object="${urls}">
-            <td th:text="*{getId()}"></td>
+        <tr th:each="url : ${urls}" th:object="${url}">
+            <td th:text="*{id}"></td>
             <td>
-                <a th:href="@{/urls/{id}(id=*{getId()})}" th:text="${#strings.abbreviate(urls.getName(), 30)}"></a>
+                <a th:text="*{name}" th:href="@{/urls/{id}(id=*{id})}"></a>
             </td>
-            <td th:unless="${urls.urlChecks.isEmpty}" th:text="${#temporals.format(urls.getUrlChecks.get(urls.getUrlChecks.size() - 1).getCreatedAt, 'dd/MM/yyyy HH:mm')}"></td>
-            <td th:unless="${urls.urlChecks.isEmpty}" th:text="*{urlChecks.get(0).statusCode}"></td>
+            <td th:if="${url.urlChecks.isEmpty}"></td>
+            <td th:if="${url.urlChecks.isEmpty}"></td>
+            <td th:unless="${url.urlChecks.isEmpty}" th:text="${#temporals.format(url.getUrlChecks.get(url.getUrlChecks.size() - 1).getCreatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:unless="${url.urlChecks.isEmpty}" th:text="*{urlChecks.get(0).statusCode}"></td>
         </tr>
         </tbody>
     </table>

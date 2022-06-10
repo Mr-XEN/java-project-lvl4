@@ -62,8 +62,8 @@ public final class UrlController {
                 .orderBy().id.desc()
                 .findList();
 
-        ctx.attribute("urlChecks", urlChecks);
         ctx.attribute("url", url);
+        ctx.attribute("urlChecks", urlChecks);
         ctx.render("urls/show.html");
     };
 
