@@ -96,33 +96,6 @@ public final class UrlController {
         ctx.redirect("/urls");
     };
 
-//    public static Handler addUrl = ctx -> {
-//
-//        String urlFromForm = ctx.formParam("url");
-//        String validUrl = getHostFromUrl(urlFromForm);
-//        if (validUrl == null) {
-//            ctx.sessionAttribute("flash", "Некорректный URL");
-//            ctx.sessionAttribute("flash-type", "danger");
-//            ctx.redirect("/");
-//            return;
-//        }
-//        Url one = new QUrl().name.contains(validUrl).findOne();
-//
-//        if (one != null) {
-//            ctx.sessionAttribute("flash", "Страница уже существует");
-//            ctx.sessionAttribute("flash-type", "info");
-//            ctx.redirect("/");
-//
-//        }
-//
-//        Url newUrl = new Url(validUrl);
-//        newUrl.save();
-//
-//        ctx.sessionAttribute("flash", "Страница успешно добавлена");
-//        ctx.sessionAttribute("flash-type", "success");
-//        ctx.redirect("/urls");
-//    };
-
     public static Handler addCheck = ctx -> {
         int id = ctx.pathParamAsClass("id", Integer.class).getOrDefault(null);
         Url url = new QUrl().id.equalTo(id).findOne();
@@ -147,9 +120,6 @@ public final class UrlController {
                 description = doc.selectFirst("meta[name=description]").attr("content");
             }
 
-//            String h1 = doc.select("h1").text();
-//            String description = doc.select("meta[name=description]").attr("content");
-
             UrlCheck newCheck = new UrlCheck(status, title, h1, description, url);
             newCheck.save();
 
@@ -163,20 +133,4 @@ public final class UrlController {
         ctx.redirect("/urls/" + id);
     };
 
-
-//    private static String getHostFromUrl(String newUrl) {
-//
-//        try {
-//            URL url = new URL(newUrl);
-//            int port = url.getPort();
-//            if (port < 1) {
-//                return url.getProtocol() + "://" + url.getHost();
-//            } else {
-//                return url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Not valid site");
-//        }
-//        return null;
-//    }
 }
