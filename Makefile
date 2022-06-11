@@ -28,8 +28,8 @@ test:
 report:
 	./gradlew jacocoTestReport
 
-#check-updates:
-#	./gradlew dependencyUpdates
+check-updates:
+	./gradlew dependencyUpdates
 #
 #image-build:
 #	docker build -t hexletcomponents/java-javalin-blog:latest .
