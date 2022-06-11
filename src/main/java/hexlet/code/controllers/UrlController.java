@@ -134,8 +134,21 @@ public final class UrlController {
 
             Document doc = Jsoup.parse(response.getBody());
             String title = doc.title();
-            String h1 = doc.select("h1").text();
-            String description = doc.select("meta[name=description]").attr("content");
+
+            String h1 = null;
+
+            if (doc.selectFirst("h1") != null) {
+                h1 = doc.selectFirst("h1").text();
+            }
+
+            String description = null;
+
+            if (doc.selectFirst("meta[name=description]") != null) {
+                description = doc.selectFirst("meta[name=description]").attr("content");
+            }
+
+//            String h1 = doc.select("h1").text();
+//            String description = doc.select("meta[name=description]").attr("content");
 
             UrlCheck newCheck = new UrlCheck(status, title, h1, description, url);
             newCheck.save();
