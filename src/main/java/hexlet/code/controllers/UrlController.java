@@ -71,9 +71,8 @@ public final class UrlController {
         try {
 
             String urlFromForm = ctx.formParam("url");
-            String validUrl = getHostFromUrl(urlFromForm);
-            URL url = new URL(validUrl);
-//            String validUrl = getHostFromUrl(urlFromForm);
+            URL url = new URL(urlFromForm);
+            String validUrl = url.getProtocol() + "://" + url.getAuthority();
 
             boolean urlExist = new QUrl()
                     .name.equalTo(validUrl)
@@ -152,19 +151,19 @@ public final class UrlController {
     };
 
 
-    private static String getHostFromUrl(String newUrl) {
-
-        try {
-            URL url = new URL(newUrl);
-            int port = url.getPort();
-            if (port < 1) {
-                return url.getProtocol() + "://" + url.getHost();
-            } else {
-                return url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
-            }
-        } catch (Exception e) {
-            System.out.println("Not valid site");
-        }
-        return null;
-    }
+//    private static String getHostFromUrl(String newUrl) {
+//
+//        try {
+//            URL url = new URL(newUrl);
+//            int port = url.getPort();
+//            if (port < 1) {
+//                return url.getProtocol() + "://" + url.getHost();
+//            } else {
+//                return url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Not valid site");
+//        }
+//        return null;
+//    }
 }
