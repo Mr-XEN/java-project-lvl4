@@ -34,7 +34,7 @@ public class App {
             get(UrlController.showUrls);
             post(UrlController.addUrl);
             get("{id}", UrlController.showUrl);
-            post("{id}/check", UrlController.addCheck);
+            post("{id}/checks", UrlController.addCheck);
         }));
     }
 
